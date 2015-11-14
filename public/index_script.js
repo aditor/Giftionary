@@ -25,3 +25,11 @@ socket.on('user-message', function(msg) {
   $('#messages').append(new_msg);
   $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 5 + 'px'}, 5);
 });
+
+// When we recieve a user message for gif command, display gif image
+socket.on('user-gif', function(msg) {
+    var img = $("<img src='" + msg + "' />");
+    var new_msg = $('<li>').append(img);
+    $('#messages').append(new_msg);
+    $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 100 + 'px'}, 2000);
+});

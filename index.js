@@ -2,6 +2,7 @@ var app = require('express')();
 var express = require('express');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var giphy = require('./giphy');
 
 var port = 3000;
 
@@ -28,8 +29,14 @@ io.on('connection', function (socket) {
 
   // message is our custom event, emit the message to everyone
   socket.on('message', function(msg) {
-    console.log("Message: " + msg);
-    io.emit('user-message', socket.id + ": " + msg);
+      console.log("Message: " + msg);
+      if (msg.substring(0,4) == '/gif') {
+	  giphy.parseGiphyResponse(msg.substring(5), function(imageUrl) {
+	      io.emit('user-gif', imageUrl);
+	  });
+      } else {
+	  io.emit('user-message', socket.id + ": " + msg);
+      }
   });
 });
 
