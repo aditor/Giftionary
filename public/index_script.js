@@ -33,3 +33,10 @@ socket.on('user-gif', function(msg) {
     $('#messages').append(new_msg);
     $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 100 + 'px'}, 2000);
 });
+
+// When we recieve a user message for answer command, display correct or incorrect
+socket.on('user-answer', function(msg) {
+    var new_msg = $('<li>').text(msg);
+    $('#messages').append(new_msg);
+    $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 5 + 'px'}, 5);
+});
