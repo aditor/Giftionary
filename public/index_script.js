@@ -20,10 +20,19 @@ var sendMessage = function() {
 
 
 // When we receive a user message, add to html list
-socket.on('user-message', function(msg) {
-  var new_msg = $('<li>').text(msg);
-  $('#messages').append(new_msg);
-  $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 5 + 'px'}, 5);
+socket.on('user-message', function(data) {
+    var msg = data.message;
+    var map = data.map;
+    console.log(data);
+    var new_msg = $('<li>').text(msg);
+    $('#messages').append(new_msg);
+    $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 5 + 'px'}, 5);
+    cloudList = [];
+    for (var key in map) {
+	cloudList.push([key, map[key]]);
+    }
+    console.log(cloudList);
+    WordCloud(document.getElementById('cloud'), { list: cloudList, weightFactor: 5, minSize: 4 } );
 });
 
 // When we recieve a user message for gif command, display gif image
@@ -40,3 +49,4 @@ socket.on('user-answer', function(msg) {
     $('#messages').append(new_msg);
     $('body,html').animate({scrollTop: $('#messages li:last-child').offset().top + 5 + 'px'}, 5);
 });
+

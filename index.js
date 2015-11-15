@@ -6,6 +6,7 @@ var giphy = require('./giphy');
 
 var port = process.env.PORT || 3000;
 var holder = "";
+var map = {};
 
 // Serve our index.html page at the root url
 app.get('/', function (req, res) {
@@ -44,11 +45,33 @@ io.on('connection', function (socket) {
 		io.emit('user-answer', socket.id + " INCORRECT WITH: " + msg.substring(8));
 	    }
 	} else {
-	    io.emit('user-message', socket.id + ": " + msg);
-	}
-    });
 
+	    var splitArray = msg.split(' ');
+	    console.log(splitArray);
+	    for (i = 0; i < splitArray.length; i++){
+		if (splitArray[i].length > 5) {
+		    console.log(splitArray[i]);
+		    if (map[splitArray[i]] === undefined) {
+			console.log("here");
+			map[splitArray[i]] = 1;
+		    } else {
+			var value = map[splitArray[i]];
+			map[splitArray[i]] = value + 1;
+		    }
+		}
+	    }
+	    var response = {
+		message: socket.id + ": " + msg,
+		map: map
+	    };
+	    io.emit('user-message', response);
+	    var splitArray = msg.split(' ');
+	}
+	console.log(map);
+    });
 });
+
+exports.map = map;
 
 // Starts the web server at the given port
 http.listen(port, function(){
